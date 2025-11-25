@@ -142,7 +142,8 @@ constexpr uint8_t SD_CS_PIN = D2;        // SDカードモジュールのCSピ�
 constexpr uint8_t PUMP_CONTROL_PIN = D3; // ポンプ制御用GPIOピン
 ```
 
-**注意**: ボタンピンとI2Cピン（OLED用）の変更は `src/greenthumb_app.h` と `src/main.cpp` の両方の編集が必要です。
+> [!WARNING]
+> ボタンピンとI2Cピン（OLED用）の変更は `src/greenthumb_app.h` と `src/main.cpp` の両方の編集が必要です。
 
 ### 2. 水やりの閾値調整 (`src/greenthumb_app.h`)
 
@@ -155,10 +156,6 @@ constexpr static float PUMP_OFF_THRESHOLD = 75.0f; // ポンプを停止させ�
 
 *   `PUMP_ON_THRESHOLD`: この値を下回るとポンプが作動します（より乾燥を検知）
 *   `PUMP_OFF_THRESHOLD`: この値以上になるとポンプが停止します（十分に湿った状態）
-
-**推奨値**:
-*   多肉植物などの乾燥を好む植物: `PUMP_ON_THRESHOLD = 3.0f`, `PUMP_OFF_THRESHOLD = 60.0f`
-*   熱帯植物などの湿潤を好む植物: `PUMP_ON_THRESHOLD = 10.0f`, `PUMP_OFF_THRESHOLD = 85.0f`
 
 ### 3. データ記録・表示間隔の変更 (`src/greenthumb_app.h`)
 
@@ -176,7 +173,8 @@ constexpr static uint32_t DISPLAY_INTERVAL = 2000;         // ディスプレイ
     *   例: `1000` = 1秒ごと
     *   例: `5000` = 5秒ごと
 
-**注意**: `RECORD_INTERVAL` を短くしすぎるとSDカードの寿命が短くなる可能性があります。
+> [!WARNING]
+> `RECORD_INTERVAL` を短くしすぎるとSDカードの寿命が短くなる可能性があります。
 
 ### 4. カスタマイズ後のビルド手順
 
