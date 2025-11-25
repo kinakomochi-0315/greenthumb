@@ -1,5 +1,7 @@
 # GreenThumb
 
+<img width="4032" height="2268" alt="Image" src="https://github.com/user-attachments/assets/0d5cd476-0059-4ec5-980a-a267992e130e" />
+
 GreenThumb は、Seeed XIAO ESP32C3 を使用したインテリジェントな自動水やり・土壌湿度監視システムです。
 土壌の湿度を常時監視し、乾燥状態に応じて自動的にポンプを作動させて水やりを行います。また、OLEDディスプレイによる情報の可視化や、SDカードへのデータロギング機能も備えています。
 
