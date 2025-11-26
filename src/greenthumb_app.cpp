@@ -60,7 +60,7 @@ void GreenThumbApp::update()
 
         int w = oled.getDisplayWidth();
         int h = oled.getDisplayHeight();
-        drawHumidityValue(0, 21, humidity);
+        drawHumidityValue(0, 22, humidity);
 
         if (pumpController.isOn())
         {
@@ -83,11 +83,11 @@ void GreenThumbApp::drawHumidityValue(const int x, const int y, const float humi
     sprintf(humStr, "%.1f", humidity);
 
     // 大きいフォントで湿度値、小さいフォントで%を表示
-    oled.setFont(u8g2_font_profont29_tr);
+    oled.setFont(u8g2_font_logisoso22_tn);
     oled.drawStr(x, y, humStr);
 
     const int humW = oled.getStrWidth(humStr);
-    oled.setFont(u8g2_font_profont17_tr);
+    oled.setFont(u8g2_font_logisoso16_tr);
     oled.drawStr(x + humW + 2, y, "%");
 }
 
@@ -142,9 +142,11 @@ void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, con
 
 void GreenThumbApp::drawWateringView(const int x, const int y, const int w, const int h)
 {
-    // ポンプ作動中の表示（例: "Watering..." と表示）
     oled.setFont(u8g2_font_profont17_tf);
-    oled.drawStr(x + 10, y + h / 2, "Watering...");
+    const char *text = "watering...";
+    int textWidth = oled.getStrWidth(text);
+    int centerX = x + (w - textWidth) / 2;
+    oled.drawStr(centerX, y + h / 2, text);
 }
 
 void GreenThumbApp::resetHumidityData()
