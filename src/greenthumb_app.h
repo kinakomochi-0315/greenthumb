@@ -51,6 +51,7 @@ private:
     constexpr static uint8_t USR_BTN_PIN = D1;                 ///< ユーザーボタンのピン番号
     constexpr static uint32_t RECORD_INTERVAL = 5 * 60 * 1000; ///< データ記録間隔（5分）
     constexpr static uint32_t DISPLAY_INTERVAL = 2000;         ///< ディスプレイ更新間隔（2秒）
+    constexpr static uint32_t PUMP_MIN_INTERVAL = 3 * 24 * 60 * 60 * 1000; ///< ポンプ再稼働までの最短クールタイム（3日）
     constexpr static float PUMP_ON_THRESHOLD = 5.0f;           ///< ポンプを作動させる湿度閾値 (%)
     constexpr static float PUMP_OFF_THRESHOLD = 75.0f;         ///< ポンプを停止させる湿度閾値 (%)
 
@@ -60,6 +61,18 @@ private:
     U8G2 &oled;                      ///< OLEDディスプレイ
     Button button;                   ///< ボタンコントローラー
     HumidityData data;               ///< 湿度データ
+
+    uint32_t lastWateringTime = 0; ///< 最後にポンプを作動させた時間（ミリ秒）
+
+    /**
+     * @brief ポンプを稼働開始させるかどうか判定する
+     */
+    inline bool showldStartWatering(float humidity) const;
+
+    /**
+     * @brief ポンプを稼働停止させるかどうか判定する
+     */
+    inline bool showldStopWatering(float humidity) const;
 
     /**
      * @brief 現在の湿度値を画面に描画する
