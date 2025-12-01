@@ -90,8 +90,9 @@ inline bool GreenThumbApp::showldStartWatering(float humidity) const
 
 inline bool GreenThumbApp::showldStopWatering(float humidity) const
 {
-    return (humidity >= PUMP_OFF_THRESHOLD || (millis() - pumpStartTime >= PUMP_MAX_DURATION)) && // ポンプ停止閾値以上の湿度、または最大稼働時間を超過
-           pumpController.isOn();                                                                 // ポンプが起動している
+    return pumpController.isOn() &&                           // ポンプが起動している
+           (humidity >= PUMP_OFF_THRESHOLD ||                 // ポンプ停止閾値以上の湿度
+            (millis() - pumpStartTime >= PUMP_MAX_DURATION)); // または最大稼働時間を超過
 }
 
 void GreenThumbApp::drawHumidityValue(const int x, const int y, const float humidity)
