@@ -63,15 +63,15 @@ void GreenThumbApp::update()
 
         int w = oled.getDisplayWidth();
         int h = oled.getDisplayHeight();
-        drawHumidityValue(0, 22, humidity);
+        drawHumidityValue(0, 32, humidity);
 
         if (pumpController.isOn())
         {
-            drawWateringView(0, 25, w, h - 25);
+            drawWateringView(0, 33, w, h - 33);
         }
         else
         {
-            drawHumidityGraph(0, 25, w, h - 25);
+            drawHumidityGraph(0, 33, w, h - 33);
         }
 
         oled.sendBuffer();
@@ -99,11 +99,24 @@ void GreenThumbApp::drawHumidityValue(const int x, const int y, const float humi
 
     // 大きいフォントで湿度値、小さいフォントで%を表示
     oled.setFont(u8g2_font_logisoso22_tn);
-    oled.drawStr(x, y, humStr);
+    oled.drawStr(x, y - 10, humStr);
 
     const int humW = oled.getStrWidth(humStr);
     oled.setFont(u8g2_font_logisoso16_tr);
-    oled.drawStr(x + humW + 2, y, "%");
+    oled.drawStr(x + humW + 2, y - 10, "%");
+
+    // 最後に水やりしてからの経過時間を表示
+    char timeStr[32];
+    uint32_t elapsedMs = millis() - lastWateringTime;
+    uint32_t elapsedDays = elapsedMs / (24 * 60 * 60 * 1000);
+    uint32_t elapsedHours = (elapsedMs % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000);
+    uint32_t elapsedMinutes = (elapsedMs % (60 * 60 * 1000)) / (60 * 1000);
+    sprintf(timeStr, "%dd %02d:%02d", elapsedDays, elapsedHours, elapsedMinutes);
+
+    oled.setFont(u8g2_font_m2icon_9_tf);
+    oled.drawStr(x, y, "\x44");
+    oled.setFont(u8g2_font_profont12_mf);
+    oled.drawStr(x + 12, y, timeStr);
 }
 
 void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, const int h)
@@ -126,6 +139,15 @@ void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, con
     }
 
     float range = maxVal - minVal;
+
+    // 最小値・最大値を描画
+    char minStr[8], maxStr[8];
+    sprintf(minStr, "%.1f", minVal);
+    sprintf(maxStr, "%.1f", maxVal);
+
+    oled.setFont(u8g2_font_04b_03b_tr);
+    oled.drawStr(x, y + 6, maxStr);
+    oled.drawStr(x, y + h, minStr);
 
     // グラフの描画
     int prevX, prevY;
