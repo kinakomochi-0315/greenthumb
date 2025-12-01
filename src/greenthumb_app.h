@@ -52,6 +52,7 @@ private:
     constexpr static uint32_t RECORD_INTERVAL = 5 * 60 * 1000; ///< データ記録間隔（5分）
     constexpr static uint32_t DISPLAY_INTERVAL = 2000;         ///< ディスプレイ更新間隔（2秒）
     constexpr static uint32_t PUMP_MIN_INTERVAL = 3 * 24 * 60 * 60 * 1000; ///< ポンプ再稼働までの最短クールタイム（3日）
+    constexpr static uint32_t PUMP_MAX_DURATION = 15 * 1000;               ///< ポンプの最大稼働時間（15秒）
     constexpr static float PUMP_ON_THRESHOLD = 5.0f;           ///< ポンプを作動させる湿度閾値 (%)
     constexpr static float PUMP_OFF_THRESHOLD = 75.0f;         ///< ポンプを停止させる湿度閾値 (%)
 
@@ -63,6 +64,7 @@ private:
     HumidityData data;               ///< 湿度データ
 
     uint32_t lastWateringTime = 0; ///< 最後にポンプを作動させた時間（ミリ秒）
+    uint32_t pumpStartTime = 0;    ///< ポンプを作動開始した時間（ミリ秒）
 
     /**
      * @brief ポンプを稼働開始させるかどうか判定する
