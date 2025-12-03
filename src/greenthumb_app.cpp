@@ -22,13 +22,13 @@ void GreenThumbApp::update()
     float humidity = reader.readHumidity();
 
     // ポンプ制御
-    if (showldStartWatering(humidity))
+    if (shouldStartWatering(humidity))
     {
         // ポンプの稼働を開始
         pumpController.turnOn();
         pumpStartTime = millis();
     }
-    else if (showldStopWatering(humidity))
+    else if (shouldStopWatering(humidity))
     {
         // ポンプの稼働を終了
         pumpController.turnOff();
@@ -81,14 +81,14 @@ void GreenThumbApp::update()
     }
 }
 
-inline bool GreenThumbApp::showldStartWatering(float humidity) const
+inline bool GreenThumbApp::shouldStartWatering(float humidity) const
 {
     return humidity < PUMP_ON_THRESHOLD &&                   // ポンプ起動閾値よりも現在の土壌水分が少ない
            !pumpController.isOn() &&                         // ポンプが起動していない
            millis() - lastWateringTime >= PUMP_MIN_INTERVAL; // 最後に水やりした時間から一定時間経過している
 }
 
-inline bool GreenThumbApp::showldStopWatering(float humidity) const
+inline bool GreenThumbApp::shouldStopWatering(float humidity) const
 {
     return pumpController.isOn() &&                           // ポンプが起動している
            (humidity >= PUMP_OFF_THRESHOLD ||                 // ポンプ停止閾値以上の湿度

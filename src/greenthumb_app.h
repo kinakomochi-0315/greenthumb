@@ -69,12 +69,12 @@ private:
     /**
      * @brief ポンプを稼働開始させるかどうか判定する
      */
-    inline bool showldStartWatering(float humidity) const;
+    inline bool shouldStartWatering(float humidity) const;
 
     /**
      * @brief ポンプを稼働停止させるかどうか判定する
      */
-    inline bool showldStopWatering(float humidity) const;
+    inline bool shouldStopWatering(float humidity) const;
 
     /**
      * @brief 現在の湿度値を画面に描画する
