@@ -65,6 +65,25 @@ private:
 
     uint32_t lastWateringTime = 0; ///< 最後にポンプを作動させた時間（ミリ秒）
     uint32_t pumpStartTime = 0;    ///< ポンプを作動開始した時間（ミリ秒）
+    uint8_t graphScaleIndex = 0;   ///< グラフ縮尺インデックス
+
+    /**
+     * @brief 現在のグラフ縮尺を取得
+     * @return 縮尺値（1, 4, 16, 64のいずれか）
+     */
+    int getGraphScale() const
+    {
+        constexpr int scales[] = {1, 4, 16, 64};
+        return scales[graphScaleIndex];
+    }
+
+    /**
+     * @brief 次のグラフ縮尺に切り替え
+     */
+    void nextGraphScale()
+    {
+        graphScaleIndex = (graphScaleIndex + 1) % 4;
+    }
 
     /**
      * @brief ポンプを稼働開始させるかどうか判定する
@@ -92,8 +111,9 @@ private:
      * @param y 描画領域の左上Y座標
      * @param w 描画領域の幅
      * @param h 描画領域の高さ
+     * @param scale 縮尺（1ピクセルあたりのデータポイント数）
      */
-    void drawHumidityGraph(const int x, const int y, const int w, const int h);
+    void drawHumidityGraph(const int x, const int y, const int w, const int h, const int scale = 1);
 
     /**
      * @brief ポンプ作動中の画面を描画する

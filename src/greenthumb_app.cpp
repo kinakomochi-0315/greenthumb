@@ -44,6 +44,12 @@ void GreenThumbApp::update()
         resetHumidityData();
     }
 
+    // シングルクリックで縮尺切り替え
+    if (button.wasReleased() && !button.wasLongPressed())
+    {
+        nextGraphScale();
+    }
+
     // 記録処理（オーバーフロー対応の差分計算）
     uint32_t currentTime = millis();
     if (currentTime - lastRecordTime >= RECORD_INTERVAL)
@@ -72,7 +78,7 @@ void GreenThumbApp::update()
         }
         else
         {
-            drawHumidityGraph(0, 33, w, h - 33);
+            drawHumidityGraph(0, 33, w, h - 33, getGraphScale());
         }
 
         oled.sendBuffer();
@@ -122,12 +128,14 @@ void GreenThumbApp::drawHumidityValue(const int x, const int y, const float humi
     oled.drawStr(x + 12, y, timeStr);
 }
 
-void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, const int h)
+void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, const int h, const int scale)
 {
     // 表示範囲内の最大値・最小値を取得
     float minVal = 100.0f;
     float maxVal = 0.0f;
-    for (int i = 0; i < w; i++)
+    int dataCount = w * scale; // 表示するデータポイント数
+
+    for (int i = 0; i < dataCount; i++)
     {
         float value = data[i];
 
@@ -143,21 +151,33 @@ void GreenThumbApp::drawHumidityGraph(const int x, const int y, const int w, con
 
     float range = maxVal - minVal;
 
-    // 最小値・最大値を描画
-    char minStr[8], maxStr[8];
+    // 最小値・最大値・縮尺を描画
+    char minStr[8], maxStr[8], scaleStr[8];
     sprintf(minStr, "%.1f", minVal);
     sprintf(maxStr, "%.1f", maxVal);
+    sprintf(scaleStr, "1/%dx", scale);
 
     oled.setFont(u8g2_font_04b_03b_tr);
     oled.drawStr(x, y + 6, maxStr);
     oled.drawStr(x, y + h, minStr);
+
+    // 右上に縮尺を表示
+    int scaleStrWidth = oled.getStrWidth(scaleStr);
+    oled.drawStr(x + w - scaleStrWidth, y + 6, scaleStr);
 
     // グラフの描画
     int prevX, prevY;
 
     for (int i = 0; i < w; i++)
     {
-        float value = data[i];
+        // scale倍のデータポイントの平均値を計算
+        float sum = 0.0f;
+        for (int j = 0; j < scale; j++)
+        {
+            sum += data[i * scale + j];
+        }
+        float value = sum / scale;
+
         int currentX = w - 1 - i;
         int currentY;
 
